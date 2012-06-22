@@ -36,6 +36,10 @@ window.Swipe = function(element, options) {
 
   // add event listeners
   if (this.element.addEventListener) {
+    this.element.addEventListener('mousedown', this, false);
+    this.element.addEventListener('mousemove', this, false);
+    this.element.addEventListener('mouseup', this, false);
+    this.element.addEventListener('mouseout', this, false);
     this.element.addEventListener('touchstart', this, false);
     this.element.addEventListener('touchmove', this, false);
     this.element.addEventListener('touchend', this, false);
@@ -160,6 +164,10 @@ Swipe.prototype = {
 
   handleEvent: function(e) {
     switch (e.type) {
+      case 'mousedown': this.onMouseDown(e); break;
+      case 'mousemove': this.onMouseMove(e); break;
+      case 'mouseup': this.onMouseUp(e); break;
+      case 'mouseout': this.onMouseUp(e); break;
       case 'touchstart': this.onTouchStart(e); break;
       case 'touchmove': this.onTouchMove(e); break;
       case 'touchend': this.onTouchEnd(e); break;
@@ -177,6 +185,67 @@ Swipe.prototype = {
 
     this.callback(e, this.index, this.slides[this.index]);
 
+  },
+  
+  onMouseDown: function(e) {
+    this.mousedown = true;
+    
+    if (!e.touches || !e.touches[0]) {
+      
+      e.touches = [{
+      
+        pageX: e.pageX,
+        pageY: e.pageY
+      
+      }];
+      
+    }
+    
+    this.onTouchStart(e);
+    
+    e.preventDefault();
+  },
+  
+  onMouseMove: function(e) {
+    if (!this.mousedown)
+      return;
+  
+    if (!e.touches || !e.touches[0]) {
+      
+      e.touches = [{
+      
+        pageX: e.pageX,
+        pageY: e.pageY
+      
+      }];
+      
+    }
+    
+    this.onTouchMove(e);
+    
+    e.preventDefault();
+  },
+  
+  onMouseUp: function(e) {
+    if (!this.mousedown)
+      return;
+      
+    this.mousedown = false;
+    
+    if (!e.touches || !e.touches[0]) {
+      
+      e.touches = [{
+      
+        pageX: e.pageX,
+        pageY: e.pageY
+      
+      }];
+      
+    }
+    
+    this.onTouchEnd(e);
+    
+    e.preventDefault();
   },
 
   onTouchStart: function(e) {
