@@ -36,13 +36,17 @@ window.Swipe = function(element, options) {
 
   // add event listeners
   if (this.element.addEventListener) {
-    this.element.addEventListener('mousedown', this, false);
-    this.element.addEventListener('mousemove', this, false);
-    this.element.addEventListener('mouseup', this, false);
-    this.element.addEventListener('mouseout', this, false);
+    var isMobile=navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i);
+    if (!isMobile) {
+      this.element.addEventListener('mousedown', this, false);
+      this.element.addEventListener('mousemove', this, false);
+      this.element.addEventListener('mouseup', this, false);
+      this.element.addEventListener('mouseout', this, false);
+    }
     this.element.addEventListener('touchstart', this, false);
     this.element.addEventListener('touchmove', this, false);
     this.element.addEventListener('touchend', this, false);
+    this.element.addEventListener('touchcancel', this, false);
     this.element.addEventListener('webkitTransitionEnd', this, false);
     this.element.addEventListener('msTransitionEnd', this, false);
     this.element.addEventListener('oTransitionEnd', this, false);
@@ -170,7 +174,8 @@ Swipe.prototype = {
       case 'mouseout': this.onMouseUp(e); break;
       case 'touchstart': this.onTouchStart(e); break;
       case 'touchmove': this.onTouchMove(e); break;
-      case 'touchend': this.onTouchEnd(e); break;
+      case 'touchend': 
+      case 'touchcancel': this.onTouchEnd(e); break;
       case 'webkitTransitionEnd':
       case 'msTransitionEnd':
       case 'oTransitionEnd':
